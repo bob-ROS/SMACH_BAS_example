@@ -54,7 +54,7 @@ class Bas(smach.State):
         if transition_request in self.children_:
             return 'go_to_{}'.format(transition_request)
         else:
-            rospy.logerr('Attempted to transition to non-existing state, selecting random state')
+            rospy.logwarn('Attempted to transition to non-existing state, selecting random state')
             return 'go_to_{}'.format(random.choice(list(self.children_.keys())))
 
         return 'go_to_MOVE_BASE'
@@ -103,8 +103,7 @@ def main():
         smach.StateMachine.add('BAS', Bas(children),
                                transitions=transitions,
                                remapping={'input_request': 'transition_request'})
-    #sm.userdata.sm_counter = 0
-    #sm_top.userdata.input_request = 0
+
     sm_top.userdata.transition_request = 'MOVEIT'
 
     # Execute SMACH plan
@@ -112,7 +111,7 @@ def main():
     sis.start()
     outcome = sm_top.execute()
     while not rospy.is_shutdown():
-        rospy.sleep(100)    # just for blocking node
+        rospy.sleep(100) # just for blocking node incase of exiting the statemachine
 
 
 if __name__ == '__main__':
