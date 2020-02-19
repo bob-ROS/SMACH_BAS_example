@@ -40,7 +40,6 @@ class Bar(smach.State):
 class Bas(smach.State):
     def __init__(self, children):
         self.children_ = children.copy()
-        #del self.children_['BAS']
         outcomes = list()
         for key in self.children_:  # auto generate outcomes
             outcomes.append('go_to_{}'.format(key))
