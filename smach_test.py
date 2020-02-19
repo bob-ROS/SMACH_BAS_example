@@ -43,7 +43,6 @@ class Bas(smach.State):
         outcomes = list()
         for key in self.children_:  # auto generate outcomes
             outcomes.append('go_to_{}'.format(key))
-        self.children_.pop('BAS', None) # BAS is not something we wish to transition to. The goto_BAS transition still exists because you have to also solve this at the other end
         smach.State.__init__(self, outcomes=outcomes, input_keys=['input_request'])
 
     def execute(self, userdata):
