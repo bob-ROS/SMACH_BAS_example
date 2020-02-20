@@ -39,21 +39,19 @@ class Bar(smach.State):
 # define state Bas
 class Bas(smach.State):
     def __init__(self, children):
-        self.children_ = children.copy()
-        outcomes = list()
-        for key in self.children_:  # auto generate outcomes
-            outcomes.append('go_to_{}'.format(key))
-        smach.State.__init__(self, outcomes=outcomes, input_keys=['input_request'])
+        # auto generate outcomes
+        self.children_ = {key: 'go_to_{}'.format(key) for key in children}
+        smach.State.__init__(self, outcomes=list(self.children_.values()), input_keys=['input_request'])
 
     def execute(self, userdata):
         rospy.sleep(1)
         transition_request = userdata.input_request
         rospy.loginfo('Executing state BAS')
         if transition_request in self.children_:
-            return 'go_to_{}'.format(transition_request)
+            return self.children_[transition_request]
         else:
             rospy.logwarn('Attempted to transition to non-existing state, selecting random state')
-            return 'go_to_{}'.format(random.choice(list(self.children_.keys())))
+            return random.choice(list(self.children_.values()))
 
         return 'go_to_MOVE_BASE'
 
