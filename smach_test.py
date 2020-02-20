@@ -39,7 +39,7 @@ class Bar(smach.State):
 # define state Bas
 class Bas(smach.State):
     def __init__(self, children):
-        # auto generate outcomes
+        # auto generate outcomes, maps a key (the substatemachine) to a value (the transition name go_to_*)
         self.children_ = {key: 'go_to_{}'.format(key) for key in children}
         smach.State.__init__(self, outcomes=list(self.children_.values()), input_keys=['input_request'])
 
@@ -52,9 +52,6 @@ class Bas(smach.State):
         else:
             rospy.logwarn('Attempted to transition to non-existing state, selecting random state')
             return random.choice(list(self.children_.values()))
-
-        return 'go_to_MOVE_BASE'
-
 
 def main():
     rospy.init_node('smach_example_state_machine')
